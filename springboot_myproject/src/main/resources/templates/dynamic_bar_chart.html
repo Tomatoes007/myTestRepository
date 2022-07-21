@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		
+		<script type="text/javascript" src="/js/jquery.js"></script>
+		<script type="text/javascript" src="/js/echarts.min.js"></script>
+		<script type="text/javascript" src="/js/vue.js"></script>
+		
+	</head>
+	
+	
+	<body>
+<!--	border:2px  solid  red-->
+		<div id="dynamic_bar_chart" style="height:700px;width:1200px;" ></div>
+		
+
+	</body>
+	
+
+	<script type="text/javascript">
+
+$(document).ready(function() {
+
+	var app = {};
+	var chartDom = document.getElementById('dynamic_bar_chart');
+	var myChart = echarts.init(chartDom);
+	var option;
+
+		var names= [];
+		var allcounts= [];
+		var partcounts= [];
+
+			$.ajax({
+
+				type: "post",
+				async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+				url: "/findDnameStuCount1",    //请求发送到dataActiont处
+				data: {},
+				dataType: "json",        //返回数据形式为json
+
+				success: function (result) {
+
+					for(var i in result){
+						console.log(i)                      // alert(i)//显示的是 1、2、3等数值
+						console.log(result[i])                //alert(data[i]);//显示为[object,object],不是我们想要的
+						// console.log(data[i].dname)          //alert(data[i].name)//显示name属性的值
+
+						for(var j in result[i]){
+							console.log(j)                  //alert(j);//显示属性的名称
+							// console.log(data[i][j])         //alert(data[i][j])//显示属性的值
+						}
+						names.push(result[i].dname);
+						allcounts.push(result[i].count1);
+						partcounts.push(result[i].count2);
+
+					}
+					console.log(names);
+					// console.log(counts);
+
+				// var a= ["你好","你好好","你真好","你很好","1","2","3","4","5","6","7","8"];
+				// var b= ["11","15","22","23","16","22","23","24","25","26","27","28"];
+				// var c= ["2","4","6","8","10","12","13","14","15","16","17","18"];
+
+					//a为部门名称，b为部门总人数，c为各部门干事的人数
+					var a= names;
+					var b= allcounts;
+					var c= partcounts;
+
+					var index = 10;
+					var index1 = 10;
+					var index2 = 10;
+					const categories = (function () {
+
+					  let len = 10;
+					  var list = [];
+					  // while (len--) {
+					  //   res.unshift(now.toLocaleTimeString().replace(/^\D*/, ''));
+					  //   // now = new Date(+now - 2000);
+					  // }
+						for (var i = 0; i < len; i++) {
+								list.push(a[i]);
+						  }
+					  return list;
+					})();
+
+
+
+					const categories2 = (function () {
+					  let res = [];
+					  let len = 10;
+					  while (len--) {
+						res.push(10 - len - 1);
+					  }
+					  return res;
+					})();
+
+
+					const data = (function () {
+					  let res = [];
+					  let len = 10;
+					  // while (len--) {
+					  //   res.push(Math.round(Math.random() * 1000));
+					  // }
+					  // return res;
+					  var list = [];
+					  for (var i = 0; i < len; i++) {
+								list.push(b[i]);
+						  }
+					  return list;
+					})();
+
+
+					const data2 = (function () {
+					  let res = [];
+					  let len = 10;
+					  var list = [];
+					  for (var i = 0; i < len; i++) {
+								list.push(c[i]);
+						  }
+					  return list;
+					})();
+
+
+
+					option = {
+					  title: {
+						text: '多图例动态图表'
+					  },
+					  tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+						  type: 'cross',
+						  label: {
+							backgroundColor: '#283b56'
+						  }
+						}
+					  },
+					  legend: {},
+					  toolbox: {
+						show: true,
+						feature: {
+						  dataView: { readOnly: false },
+						  restore: {},
+						  saveAsImage: {}
+						}
+					  },
+					  dataZoom: {
+						show: false,
+						start: 0,
+						end: 100
+					  },
+					  xAxis: [
+						{
+						  type: 'category',
+						  boundaryGap: true,
+						  data: categories
+						},
+						{
+						  type: 'category',
+						  boundaryGap: true,
+						  data: categories2
+						}
+					  ],
+					  yAxis: [
+						{
+						  type: 'value',
+						  scale: true,
+						  name: '各部门干事人数',
+						  max: 20,
+						  min: 0,
+						  boundaryGap: [0.2, 0.2]
+						},
+						{
+						  type: 'value',
+						  scale: true,
+						  name: '各部门总人数',
+						  max: 40,
+						  min: 0,
+						  boundaryGap: [0.2, 0.2]
+						}
+					  ],
+					  series: [
+						{
+							  name: '部门人数柱形图',
+						  type: 'bar',
+						  xAxisIndex: 1,
+						  yAxisIndex: 1,
+						  data: data
+						},
+						{
+						  name: '部门干事人数折线图',
+						  type: 'line',
+						  data: data2
+						}
+					  ]
+					};
+					app.count = 11;
+					setInterval(function () {
+
+					  // let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '');
+						if (index == a.length ) {
+									index = 0;
+							}
+							if (index1 ==b.length ) {
+									index1 = 0;
+							}
+							if (index2 ==b.length ) {
+									index2 = 0;
+							}
+
+
+					  data.shift();
+					  data.push(b[index1++]);
+
+					  data2.shift();
+					  data2.push(c[index2++]);
+
+					  categories.shift();
+					  categories.push(a[index++]);
+					  // option.xAxis[0].data.push(getPriceData[index++].month);
+
+					  categories2.shift();
+					  categories2.push(app.count++);
+					  myChart.setOption({
+						xAxis: [
+						  {
+							data: categories
+						  },
+						  {
+							data: categories2
+						  }
+						],
+						series: [
+						  {
+							data: data
+						  },
+						  {
+							data: data2
+						  }
+						]
+					  });
+					}, 2100);
+
+					option && myChart.setOption(option);
+				},
+				error:function (data) {
+					// alert("");
+					console.log("错误")
+				}
+			})
+});
+
+		
+	</script>
+	
+	
+</html>

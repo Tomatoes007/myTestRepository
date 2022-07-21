@@ -1,0 +1,58 @@
+<html lang="en" dir="ltr" >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/css/email_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+</head>
+<body>
+<div class="newsletter" >
+    <h1 :style="{text-transform: uppercase;color: #fff;font-size: 48px;line-height: 40px;}">
+        Email 地址验证<br>
+        <br>
+        <span>这封信是由图书管理系统发送的</span>
+    </h1>
+    <br>
+    <p>如果您是图书管理系统的新用户，您只需要点击下方的按钮进行激活账号即可.</p>
+
+    <a th:href="@{${activationUrl}}"><span th:text="${activationUrl}"  id="activation" >   </span></a>
+
+    <div class="txtb">
+<!--        <button type="button" οnclick="javascrtpt:window.location.href='https://www.baidu.com'">-->
+<!--            <i class="fas fa-arrow-right"></i>-->
+<!--        </button>-->
+
+    </div>
+    <p>感谢您的访问，祝您生活愉快！.</p>
+</div>
+
+<!--<script type="text/javascript" charset="UTF-8">-->
+<!--    //注册账号-->
+<!--    $("#activation").on("click",function() {-->
+<!--        $.ajax({-->
+<!--            url:"/user/activation",-->
+<!--            type:"POST",-->
+<!--            data:{-->
+
+<!--            },-->
+<!--            resultType:"JSON",-->
+<!--            success: function (result) {-->
+<!--                alert(result.message);-->
+<!--                if(result.code==200){-->
+<!--                    alert(result.message);-->
+<!--                    window.location.href="https://www.baidu.com";-->
+
+<!--                }-->
+
+<!--            },-->
+<!--            error:function (result) {-->
+<!--                -->
+<!--            }-->
+<!--        })-->
+<!--    })-->
+
+<!--</script>-->
+
+</body>
+</html>
